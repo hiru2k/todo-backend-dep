@@ -4,6 +4,7 @@ import cors from "cors";
 import erroHandler from "./middleware/error-handler.middleware";
 import usersRouter from "./routers/users.router";
 import authRouter from "./routers/auth.router";
+import todosRouter from "./routers/todos.router";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/todos", todosRouter);
 
 app.use(erroHandler);
 
