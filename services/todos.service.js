@@ -22,9 +22,38 @@ const getTodos = async (userId) => {
   return todos;
 };
 
+const toggleTodo = async (todoId) => {
+  const todo = await prisma.toDo.findUnique({
+    where: {
+      id: todoId,
+    },
+  });
+
+  await prisma.toDo.update({
+    where: {
+      id: todoId,
+    },
+    data: {
+      completed: !todo.completed,
+    },
+  });
+};
+
+const checkOwnership = async (todoId, userId) => {
+  const todo = await prisma.toDo.findUnique({
+    where: {
+      id: todoId,
+    },
+  });
+
+  return todo.userId === userId;
+};
+
 const todosService = {
   createTodo,
   getTodos,
+  toggleTodo,
+  checkOwnership,
 };
 
 export default todosService;

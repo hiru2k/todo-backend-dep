@@ -24,4 +24,20 @@ todosRouter.post("/", authMiddleware, async (req, res, next) => {
   }
 });
 
+todosRouter.put("/:id", authMiddleware, async (req, res, next) => {
+  try {
+    const todoId = Number(req.params.id);
+
+    const isOwned = await todosService.checkOwnership(todoId, req.userId);
+    if (!isOwned) {
+      return res.status(403).send("You are not authorized to do this");
+    }
+
+    await todosService.toggleTodo(todoId);
+    res.send("Todo toggled");
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default todosRouter;
