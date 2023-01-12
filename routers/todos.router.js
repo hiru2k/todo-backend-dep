@@ -4,6 +4,15 @@ import todosService from "../services/todos.service";
 
 const todosRouter = Router();
 
+todosRouter.get("/", authMiddleware, async (req, res, next) => {
+  try {
+    const todos = await todosService.getTodos(req.userId);
+    res.send(todos);
+  } catch (error) {
+    next(error);
+  }
+});
+
 todosRouter.post("/", authMiddleware, async (req, res, next) => {
   try {
     const todo = req.body;
