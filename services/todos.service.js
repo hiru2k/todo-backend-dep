@@ -3,57 +3,66 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const createTodo = async (todo) => {
-  todo.completed = false;
+	todo.completed = false;
 
-  const newTodo = await prisma.toDo.create({
-    data: todo,
-  });
+	const newTodo = await prisma.toDo.create({
+		data: todo,
+	});
 
-  return newTodo;
+	return newTodo;
 };
 
 const getTodos = async (userId) => {
-  const todos = await prisma.toDo.findMany({
-    where: {
-      userId,
-    },
-  });
+	const todos = await prisma.toDo.findMany({
+		where: {
+			userId,
+		},
+	});
 
-  return todos;
+	return todos;
 };
 
 const toggleTodo = async (todoId) => {
-  const todo = await prisma.toDo.findUnique({
-    where: {
-      id: todoId,
-    },
-  });
+	const todo = await prisma.toDo.findUnique({
+		where: {
+			id: todoId,
+		},
+	});
 
-  await prisma.toDo.update({
-    where: {
-      id: todoId,
-    },
-    data: {
-      completed: !todo.completed,
-    },
-  });
+	await prisma.toDo.update({
+		where: {
+			id: todoId,
+		},
+		data: {
+			completed: !todo.completed,
+		},
+	});
 };
 
 const checkOwnership = async (todoId, userId) => {
-  const todo = await prisma.toDo.findUnique({
-    where: {
-      id: todoId,
-    },
-  });
+	const todo = await prisma.toDo.findUnique({
+		where: {
+			id: todoId,
+		},
+	});
 
-  return todo.userId === userId;
+	return todo.userId === userId;
+};
+
+const deleteTodo = async (id) => {
+	await prisma.toDo.delete({
+		where: {
+			id,
+		},
+	});
 };
 
 const todosService = {
-  createTodo,
-  getTodos,
-  toggleTodo,
-  checkOwnership,
+	createTodo,
+	getTodos,
+	toggleTodo,
+	checkOwnership,
+	deleteTodo,
 };
 
 export default todosService;
